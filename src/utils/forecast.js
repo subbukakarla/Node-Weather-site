@@ -23,8 +23,12 @@ const forecast = (latitude,longitude,callback)=>{
           //const respBody = response.body
           //console.log(respBody)
           //console.log("This week prediction: "+respBody.daily.summary)
-          callback(undefined,body.daily.data[0].summary+" Current temperature is "+body.currently.temperature+"°C and "+
-                      body.currently.precipProbability+"% chances of "+body.currently.precipType)
+          const msg1 =body.daily.data[0].summary+" Current temperature is "+body.currently.temperature+"°C, windspeed is "
+                      + body.currently.windSpeed +" and "+
+                      body.currently.precipProbability+"% chances of "+body.currently.precipType;
+          //console.log(body.daily[0])
+          const msg2 = "High temperature:" + body.daily.data[0].temperatureHigh + "°C & Low temperature:" + body.daily.data[0].temperatureLow+"°C."          
+          callback(undefined,[msg1,msg2] ) 
     }   
   })
 }

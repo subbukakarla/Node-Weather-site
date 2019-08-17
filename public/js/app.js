@@ -24,12 +24,13 @@ const weatherForm= document.querySelector('form')
 const message1 =document.getElementById('message1')
 //message1.textContent ='from js'
 const message2 = document.querySelector('#message2')  //another way like gerElement by id
-
+const message3 = document.querySelector('#message3')
 
 weatherForm.addEventListener('submit',(e)=>{
     e.preventDefault()
     message1.textContent = 'Loading details...'
     message2.textContent = ''
+    message3.textContent = ''
     const location = search.value
     console.log(location)
     fetch("/weather?address="+location).then((response)=>{
@@ -42,6 +43,7 @@ weatherForm.addEventListener('submit',(e)=>{
             console.log(data.forecast)
             message1.textContent = data.location
             message2.textContent = data.forecast
+            message3.textContent=data.temperatures
         
         }  
     })

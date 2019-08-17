@@ -77,7 +77,8 @@ app.get('/weather',(req,res)=>{
                  res.send({
                      address_searched:req.query.address,
                      location,
-                     forecast: forecastmsg
+                     forecast: forecastmsg[0],
+                     temperatures: forecastmsg[1]
                  }) 
             })
         })
