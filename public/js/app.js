@@ -63,6 +63,9 @@ const currentLocation = document.querySelector('#current-Location')
 let skipDefaultFormSubmission = false 
 currentLocation.addEventListener('click',()=>{
     message1.textContent = 'Allow your browser to access your location'
+    message2.textContent = ''
+    message3.textContent = ''
+
     skipDefaultFormSubmission=true
     if(!navigator.geolocation){
         return alert('Your Browser does not support geolocation feature')
