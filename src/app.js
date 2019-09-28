@@ -3,6 +3,7 @@ const express = require('express')
 const hbs = require('hbs')
 const geoLocation = require('./utils/geoLocation')
 const forecast = require('./utils/forecast')
+const reverseGeo = require('./utils/reverseGeoLocation')
 
 const app = express()
 
@@ -51,37 +52,67 @@ app.get('/about',(req,res)=>{
     })
 
 app.get('/weather',(req,res)=>{
-    if(!req.query.address){
+    // console.log(req)
+    console.log(req.query)
+    console.log(req.query.coords)
+    // req.query.coords.split(',')
+    if(!req.query.address && !req.query.coords){
         return res.send({
             error: 'You must provide an address'
         })
     }
+    
 
-        console.log('Address entered is: '+req.query.address)
-        geoLocation(req.query.address,(error,{latitude,longitude,location}={})=>{
-            console.log('error:',error)
-            console.log(latitude,longitude,location)
+
+    if (req.query.coords) {
+        const lat = req.query.coords.split(',')[0]
+        const long = req.query.coords.split(',')[1]
+
+        forecast(lat,long,(error,forecastmsg)=>{
             if(error){
-               return res.send({
-                error: error
-            } )
-            }
-            forecast(latitude,longitude,(error,forecastmsg)=>{
-                console.log('error:',error)
-                if(error){
-                    return res.send({
-                     error: error
-                 } )
-                 }
-                 console.log(forecastmsg)
-                 res.send({
-                     address_searched:req.query.address,
-                     location,
+                return res.send({
+                 error: error
+				})
+             }
+             reverseGeo(lat,long,(error,location)=>{
+                return res.send({
+                    //  address_searched:req.query.address,
+                      location,
                      forecast: forecastmsg[0],
                      temperatures: forecastmsg[1]
                  }) 
-            })
+        })		
+		})
+}
+
+if(req.query.address){
+    console.log('Address entered is: '+req.query.address)
+    geoLocation(req.query.address,(error,{latitude,longitude,location}={})=>{
+        console.log('error:',error)
+        console.log(latitude,longitude,location)
+        if(error){
+           return res.send({
+            error: error
+        } )
+        }
+        forecast(latitude,longitude,(error,forecastmsg)=>{
+            console.log('error:',error)
+            if(error){
+                return res.send({
+                 error: error
+             } )
+             }
+             console.log(forecastmsg)
+             res.send({
+                 address_searched:req.query.address,
+                 location,
+                 forecast: forecastmsg[0],
+                 temperatures: forecastmsg[1]
+             }) 
         })
+    })
+}
+  
    
 })
 
